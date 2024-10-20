@@ -35,4 +35,4 @@ jobs:
       run: npm run test:ci
 
     - name: Deploy to GitHub Pages
-      run: npx angular-cli-ghpages --dir=dist/todo-app
+      run: npx angular-cli-ghpages --dir=dist/todo-app/browser
