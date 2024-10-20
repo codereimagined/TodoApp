@@ -33,6 +33,12 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: "ChromeHeadless",
+        flags: ["--disable-gpu", "--no-sandbox"],
+      },
+    },
     restartOnFileChange: true
   });
 };
