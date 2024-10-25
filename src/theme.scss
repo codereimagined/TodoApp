@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+@use "../m3-theme" as t;
+//
+@include mat.core();
+//
+html {
+  $theme: t.$light-theme;
+
+  // Apply the light theme by default
+  @include mat.core-theme($theme);
+  @include mat.all-component-themes($theme);
+
+  // When using system variables, remember to provide values for them
+  // or uncomment the lines below to generate them from the theme.
+  @include mat.system-level-colors($theme);
+  @include mat.system-level-typography($theme);
+}

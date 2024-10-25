@@ -8,7 +8,7 @@ describe('TodosService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(TodosService);
-    service.cleanAll()
+    service.cleanAll();
   });
 
   it('should be created', () => {
@@ -17,28 +17,28 @@ describe('TodosService', () => {
 
   it('should create todo and assign createdAt and Id fields', () => {
     service.addTodo({
-      title: "test",
+      title: 'test',
       done: false,
-      description: "Description"
-    })
+      description: 'Description',
+    });
 
     const todo = service.todos().at(0);
     expect(todo?.id).toBe(1);
-    expect(todo?.createdAt).toBeDefined()
-  })
+    expect(todo?.createdAt).toBeDefined();
+  });
 
   it('should create todo and assign createdAt and Id fields', () => {
     service.addTodo({
-      title: "test1",
+      title: 'test1',
       done: false,
-      description: "Description1"
-    })
+      description: 'Description1',
+    });
 
     service.addTodo({
-      title: "test2",
+      title: 'test2',
       done: true,
-      description: "Description2"
-    })
+      description: 'Description2',
+    });
 
     // console.log(service.todos())
 
@@ -46,13 +46,12 @@ describe('TodosService', () => {
       const todo = service.todos().at(1)!!;
       service.updateTodo(2, {
         ...todo,
-        title: "updatedTitle",
-      })
+        title: 'updatedTitle',
+      });
     }
 
     const todo = service.todos().at(0);
     expect(todo?.id).toBe(1);
-    expect(todo?.createdAt).toBeDefined()
-  })
-
+    expect(todo?.createdAt).toBeDefined();
+  });
 });
