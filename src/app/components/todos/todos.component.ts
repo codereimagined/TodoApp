@@ -22,7 +22,7 @@ export class TodosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.todos = [
+    // this.todos = [ // TODO: Should we do it here or in Constructor?
     //   { content: "Test 1", completed: false }
     // ];
   }
@@ -30,7 +30,6 @@ export class TodosComponent implements OnInit {
   toggleDone (id:number) {
     this.todos.map((v, i) => {
       if (i == id) v.completed = !v.completed;
-
       return v;
     })
   }
