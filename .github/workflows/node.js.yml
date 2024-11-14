@@ -5,13 +5,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,26 +19,25 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
 
-    - name: Build Angular project
-      run: npm run build -- --configuration production
+      - name: Build Angular project
+        run: npm run build -- --configuration production
 
-    # - name: Run tests
-    #   run: npm run test:ci
+      - name: Run tests
+        run: npm run test:ci
 
-    - name: Copy files to VPS
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" | awk '{gsub(/\\n/,"\n")}1' > ~/.ssh/id_rsa
-        chmod 400 ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-        sftp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
-          put -r dist /home/${{ secrets.SSH_USER }}/
-          EOF
-
+      - name: Copy files to VPS
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | awk '{gsub(/\\n/,"\n")}1' > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          sftp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            put -r dist /home/${{ secrets.SSH_USER }}/
+            EOF
