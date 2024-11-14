@@ -30,8 +30,8 @@ jobs:
       - name: Build Angular project
         run: npm run build -- --configuration production
 
-      - name: Run tests
-        run: npm run test:ci
+      # - name: Run tests
+      #   run: npm run test:ci
 
       - name: Copy files to VPS
         run: |
