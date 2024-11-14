@@ -28,17 +28,17 @@ jobs:
       - run: npm ci
 
       - name: Build Angular project
-        run: npm run build -- --configuration production --base-href "/TodoApp"
+        run: npm run build -- --configuration production
 
-    # - name: Run tests
-    #   run: npm run test:ci
+      # - name: Run tests
+      #   run: npm run test:ci
 
-    # - name: Set up Git user
-    #   run: |
-    #     git config --global user.name "github-actions[bot]"
-    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-    # - name: Deploy to GitHub Pages
-    #   run: npx angular-cli-ghpages --dir=dist/todo-app/browser --no-silent
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Copy files to VPS
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | awk '{gsub(/\\n/,"\n")}1' > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+          sftp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            put -r dist /home/${{ secrets.SSH_USER }}/
+            EOF
