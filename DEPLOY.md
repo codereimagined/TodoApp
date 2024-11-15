@@ -26,3 +26,10 @@ sudo systemctl restart ssh
 ~OR~
 sudo systemctl restart sshd
 ```
+
+# Run Docker on VPS
+
+```
+cd /home/sftpuser/TodoAPI
+sudo docker compose up -d
+```

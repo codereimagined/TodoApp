@@ -40,5 +40,8 @@ jobs:
           chmod 400 ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
           sftp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} -v ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
-            put -r dist /home/${{ secrets.SSH_USER }}/
+            mkdir /home/${{ secrets.SSH_USER }}/TodoApp/
+            put -r dist /home/${{ secrets.SSH_USER }}/TodoApp/
+            put -r reverse_proxy /home/${{ secrets.SSH_USER }}/TodoApp/
+            put vps.dockerfile /home/${{ secrets.SSH_USER }}/TodoApp/
             EOF
