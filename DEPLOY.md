@@ -26,3 +26,11 @@ sudo systemctl restart ssh
 ~OR~
 sudo systemctl restart sshd
 ```
+
+# Run Docker on VPS
+
+```
+cd /home/sftpuser/TodoApp
+sudo docker build -f vps.dockerfile -t todo-app .
+sudo docker run -p 80:80 -d todo-app
+```

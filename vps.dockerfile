@@ -10,3 +10,4 @@ COPY dist/todo-app/browser /usr/share/nginx/html
 
 # Specify the command to run NGINX in the foreground
 CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
