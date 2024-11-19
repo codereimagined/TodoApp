@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { MatButtonToggle } from '@angular/material/button-toggle';
 import { RealTodosService } from '../services/real-todos.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
@@ -9,10 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-todos-list',
-  standalone: true,
   imports: [
-    MatSlideToggle,
-    MatButtonToggle,
     MatLabel,
     FormsModule,
     ReactiveFormsModule,
