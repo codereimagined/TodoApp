@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, ResourceStatus } from '@angular/core';
 import { RealTodosService } from '../services/real-todos.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
@@ -19,18 +19,23 @@ import { MatTableModule } from '@angular/material/table';
   templateUrl: './todos-list.component.html',
   styleUrl: './todos-list.component.scss',
 })
-export class TodosListComponent implements OnInit {
-  protected readonly todosSvc = inject(RealTodosService);
+export class TodosListComponent {
+  private readonly todosSvc = inject(RealTodosService);
 
-  protected readonly todos = this.todosSvc.items;
+  protected readonly todosResource = this.todosSvc.todosResource;
+  protected readonly todoDetailsResource = this.todosSvc.todoDetailsResource;
 
-  protected readonly displayedColumns: string[] = ['id', 'item', 'completedAt'];
+  // Id to show details for
+  protected readonly detailsId = this.todosSvc.todoDetailsId;
 
-  todoFormControl = new FormControl('');
+  protected readonly displayedColumns: string[] = [
+    'id',
+    'item',
+    'completedAt',
+    'delete',
+  ];
 
-  ngOnInit(): void {
-    this.todosSvc.fetchItems();
-  }
+  protected readonly todoFormControl = new FormControl('');
 
   addTodo() {
     const value = this.todoFormControl.value;
@@ -38,10 +43,25 @@ export class TodosListComponent implements OnInit {
     if (value) {
       console.log('Add Todo', value);
       this.todosSvc.createItem(value).subscribe(() => {
-        this.todosSvc.fetchItems();
+        //Maybe encapsulate this into service?
+        this.todosSvc.todosResource.reload();
       });
     }
 
     this.todoFormControl.reset();
   }
+
+  deleteTodo(id: string) {
+    this.todosSvc.deleteItem(id).subscribe(() => {
+      // Maybe encapsulate resource reload into service itself?
+      this.todosResource.reload();
+    });
+  }
+
+  loadDetails(id: string) {
+    console.log('Load Details', id);
+    this.todosSvc.loadTodoDetails(id);
+  }
+
+  protected readonly ResourceStatus = ResourceStatus;
 }
