@@ -33,7 +33,9 @@
   <h1>Loading a list of TODOs</h1>
 } @else if (todosResource.error()) {
   <h1>Error loading a list of TODOs: {{ todosResource.error() }}</h1>
-} @else if (todosResource.status() == ResourceStatus.Resolved) {
+}
+
+@if (todosResource.hasValue()) {
   <table
     mat-table
     [dataSource]="todosResource.value() || []"
@@ -84,16 +86,13 @@
 
 <h2>
   Debug resource loading status: {{ ResourceStatus[detailsStatus] }}
-  @if (
-    detailsStatus === ResourceStatus.Loading ||
-    detailsStatus === ResourceStatus.Reloading
-  ) {
+  @if (todoDetailsResource.isLoading()) {
     Id {{ detailsId() }}
   }
 </h2>
 
 @let todo = todoDetailsResource.value();
-@if (detailsStatus === ResourceStatus.Resolved && todo) {
+@if (todo) {
   <ul>
     <li>Id: {{ todo.id }}</li>
     <li>Item: {{ todo.item }}</li>

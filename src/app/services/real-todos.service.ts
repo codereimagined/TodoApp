@@ -39,11 +39,10 @@ export class RealTodosService {
 
   readonly todoDetailsResource = rxResource({
     request: this.todoDetailsId,
-    loader: () => {
-      const id = this.todoDetailsId();
-      if (!id) return of(undefined);
+    loader: ({ request }) => {
+      if (!request) return of(undefined);
 
-      return this.http.get<Item>(`${this.apiUrl}/${id}`).pipe(
+      return this.http.get<Item>(`${this.apiUrl}/${request}`).pipe(
         delay(500),
         // tap((items) => {
         //   if (Math.random() > 0.5)
