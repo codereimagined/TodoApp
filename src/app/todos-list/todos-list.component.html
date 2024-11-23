@@ -14,28 +14,89 @@
   <button mat-raised-button type="submit" class="todo-submit">Add Todo</button>
 </form>
 
-<table mat-table [dataSource]="todos()" class="mat-elevation-z8">
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+<div>
+  <button
+    mat-raised-button
+    type="button"
+    class="todo-reload"
+    (click)="todosResource.reload()"
+  >
+    Reload todos
+  </button>
+</div>
 
-  <!-- Position Column -->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-  </ng-container>
+<h2>
+  Debug resource loading status: {{ ResourceStatus[todosResource.status()] }}
+</h2>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="item">
-    <th mat-header-cell *matHeaderCellDef>Item</th>
-    <td mat-cell *matCellDef="let element">{{ element.item }}</td>
-  </ng-container>
+@if (todosResource.isLoading()) {
+  <h1>Loading a list of TODOs</h1>
+} @else if (todosResource.error()) {
+  <h1>Error loading a list of TODOs: {{ todosResource.error() }}</h1>
+} @else if (todosResource.status() == ResourceStatus.Resolved) {
+  <table
+    mat-table
+    [dataSource]="todosResource.value() || []"
+    class="mat-elevation-z8"
+  >
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="loadDetails(element.id)">
+          {{ element.id }}
+        </button>
+      </td>
+    </ng-container>
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="completedAt">
-    <th mat-header-cell *matHeaderCellDef>CompletedAt</th>
-    <td mat-cell *matCellDef="let element">{{ element.completedAt }}</td>
-  </ng-container>
+    <ng-container matColumnDef="item">
+      <th mat-header-cell *matHeaderCellDef>Item</th>
+      <td mat-cell *matCellDef="let element">{{ element.item }}</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+    <ng-container matColumnDef="completedAt">
+      <th mat-header-cell *matHeaderCellDef>CompletedAt</th>
+      <td mat-cell *matCellDef="let element">{{ element.completedAt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef>Delete</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="deleteTodo(element.id)">X</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+} @else {
+  <h1>Unknown status of TODOs resource: {{ todosResource.status() }}</h1>
+}
+
+@let detailsStatus = todoDetailsResource.status();
+
+<h1>
+  Details
+  <button mat-raised-button (click)="todoDetailsResource.reload()">
+    Reload
+  </button>
+  <button mat-raised-button (click)="loadDetails('')">Clean</button>
+</h1>
+
+<h2>
+  Debug resource loading status: {{ ResourceStatus[detailsStatus] }}
+  @if (
+    detailsStatus === ResourceStatus.Loading ||
+    detailsStatus === ResourceStatus.Reloading
+  ) {
+    Id {{ detailsId() }}
+  }
+</h2>
+
+@let todo = todoDetailsResource.value();
+@if (detailsStatus === ResourceStatus.Resolved && todo) {
+  <ul>
+    <li>Id: {{ todo.id }}</li>
+    <li>Item: {{ todo.item }}</li>
+    <li>CompletedAt: {{ todo.completedAt }}</li>
+  </ul>
+}
