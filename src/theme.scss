@@ -1,13 +1,15 @@
 @use "@angular/material" as mat;
 @use "../m3-theme" as t;
 //
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 //
 html {
   $theme: t.$light-theme;
 
   // Apply the light theme by default
-  @include mat.core-theme($theme);
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-themes($theme);
 
   // When using system variables, remember to provide values for them
