@@ -137,6 +137,21 @@ Resources:
           TargetOriginId: !Sub "S3-${AWS::StackName}-root"
           ViewerProtocolPolicy: "redirect-to-https"
           ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
+        CacheBehaviors:
+          - PathPattern: "/prod/api/*"
+            TargetOriginId: APIGatewayOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            ForwardedValues:
+              QueryString: true
+            CachePolicyId: !Ref NoCachingPolicy
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
         # CustomErrorResponses:
         #   - ErrorCachingMinTTL: 60
         #     ErrorCode: 404
@@ -160,6 +175,10 @@ Resources:
               HTTPPort: 80
               HTTPSPort: 443
               OriginProtocolPolicy: http-only
+          - Id: APIGatewayOrigin
+            DomainName: "e9aipuh9r3.execute-api.us-east-1.amazonaws.com"
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
         PriceClass: "PriceClass_All"
         ViewerCertificate:
           AcmCertificateArn: !Ref Certificate
@@ -225,6 +244,25 @@ Resources:
             ModeBlock: true
             Override: true
             Protection: true
+
+  # No Caching Policy for API
+  NoCachingPolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: "NoCachingPolicy"
+        DefaultTTL: 0
+        MaxTTL: 0
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+          EnableAcceptEncodingGzip: false
+          EnableAcceptEncodingBrotli: false
 
 Outputs:
   SolutionVersion:
