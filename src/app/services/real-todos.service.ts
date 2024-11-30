@@ -42,13 +42,15 @@ export class RealTodosService {
     loader: ({ request }) => {
       if (!request) return of(undefined);
 
-      return this.http.get<Item>(`${this.apiUrl}/${request}`).pipe(
-        delay(500),
+      return this.http
+        .get<Item>(`${this.apiUrl}/${request}`)
+        .pipe
+        // delay(500),
         // tap((items) => {
         //   if (Math.random() > 0.5)
         //     throw new Error('Random details loading error');
         // }),
-      );
+        ();
     },
   });
 
