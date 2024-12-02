@@ -1,4 +1,4 @@
-export class Todo {
-    content:string | undefined;
-    completed:boolean | undefined;
+export interface Todo {
+  content?: string;
+  completed?: boolean;
 }
